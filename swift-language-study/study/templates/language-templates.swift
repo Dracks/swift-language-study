@@ -15,9 +15,24 @@ extension Templates {
                 }
                 Form{
                     H2("Add language")
-                    
+                    Form{
+                        input(type: .text, label: "Language", name: "name")
+                        Button("Add").type(.submit)
+                    }.method(.post)
                 }.method(.post)
             }
         }.class("contents"))
+    }
+
+    static func editLanguage(language: Language, error: String?=nil) -> Document {
+        return layout(title: "Editing \(language.name)", content: Main{
+            Article{
+                H1("Editing \"\(language.name)\"")
+                Form{
+                    input(type: .text, label: "Language", name: "name", value: language.name)
+                    Button("Save").type(.submit)
+                }.method(.post)
+            }
+        })
     }
 }

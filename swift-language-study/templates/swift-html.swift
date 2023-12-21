@@ -8,6 +8,15 @@ class Templates {
             Input().type(type).name(name).value(value)
         }
     }
+
+    static func notFound() -> Document {
+        return layout(title: "Not found", content: Main{
+            Article{
+                H1("Not found")
+                Div("Page not found")
+            }
+        })
+    }
     
     static func layout(title: String, content: Tag) -> Document {
         return Document(.html){
@@ -28,12 +37,16 @@ class Templates {
 let renderer = DocumentRenderer(minify: false, indent: 2)
 
 extension Document : ResponseEncodable, AsyncResponseEncodable {
+
+    public func render() -> String {
+        return renderer.render(self)
+    }
     
     public func encodeResponse(for request: Request) -> EventLoopFuture<Response> {
       var headers = HTTPHeaders()
       headers.add(name: .contentType, value: "text/html")
       return request.eventLoop.makeSucceededFuture(.init(
-        status: .ok, headers: headers, body: .init(string: renderer.render(self))
+        status: .ok, headers: headers, body: .init(string: self.render())
       ))
     }
     
@@ -41,7 +54,7 @@ extension Document : ResponseEncodable, AsyncResponseEncodable {
     public func encodeResponse(for request: Request) async throws -> Response {
       var headers = HTTPHeaders()
       headers.add(name: .contentType, value: "text/html")
-        return .init(status: .ok, headers: headers, body: .init(string: renderer.render(self)))
+        return .init(status: .ok, headers: headers, body: .init(string: self.render()))
     }
 }
 

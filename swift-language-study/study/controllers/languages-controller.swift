@@ -12,8 +12,8 @@ struct LanguageController: RouteCollection {
         let languagesRoute = routes.grouped("languages")
         languagesRoute.get(use: getAll)
         languagesRoute.post(use: create)
-        /*languagesRoute.get(":id", use: getOne)
-        languagesRoute.put(":id", use: update)*/
+        languagesRoute.get(":id", use: getOne)
+        languagesRoute.post(":id", use: update)
         languagesRoute.delete(":id", use: delete)
     }
 
@@ -24,28 +24,38 @@ struct LanguageController: RouteCollection {
     }
 
     // Obté un idioma per ID
-    func getOne(req: Request) throws -> EventLoopFuture<Language> {
+    func getOne(req: Request) async throws -> Response {
         let languageID = try req.parameters.require("id", as: UUID.self)
-        return Language.find(languageID, on: req.db)
-            .unwrap(or: Abort(.notFound))
+        let language = try await Language.query(on: req.db)
+            .filter(\.$id == languageID)
+            .first()
+        
+        if let language = language {
+            return try await Templates.editLanguage(language: language).encodeResponse(for: req)
+        }
+        return .init(status: .notFound, body: .init(string: Templates.notFound().render()))
     }
 
     // Crea un nou idioma
-    func create(req: Request) throws -> EventLoopFuture<Language> {
+    func create(req: Request) async throws -> Document {
         let language = try req.content.decode(Language.self)
-        return language.create(on: req.db).map { language }
+        try await language.create(on: req.db)
+        return try await self.getAll(req: req)
     }
 
     // Actualitza un idioma existent
-    func update(req: Request) throws -> EventLoopFuture<Language> {
+    func update(req: Request) async throws -> Response {
         let languageID = try req.parameters.require("id", as: UUID.self)
         let updatedLanguage = try req.content.decode(Language.self)
-        return Language.find(languageID, on: req.db)
-            .unwrap(or: Abort(.notFound))
-            .flatMap { language in
-                language.name = updatedLanguage.name
-                return language.update(on: req.db).transform(to: language)
-            }
+        let language = try await Language.query(on: req.db)
+            .filter(\.$id == languageID)
+            .first()
+        if let language = language {
+            language.name = updatedLanguage.name
+            try await language.save(on: req.db)
+            return req.redirect(to: "/languages")
+        }
+        return notFoundResponse(req: req)
     }
 
     // Esborra un idioma
