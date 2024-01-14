@@ -16,6 +16,7 @@ let package = Package(
         // 🍃 An expressive, performant, and extensible templating language built for Swift.
         .package(url: "https://github.com/vapor/leaf.git", from: "4.2.4"),
         .package(url: "https://github.com/binarybirds/swift-html", from: "1.6.0"),
+        .package(url: "https://github.com/apple/swift-format", from: "509.0.0"),
     ],
     targets: [
         .executableTarget(
