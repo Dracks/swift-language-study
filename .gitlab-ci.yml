@@ -1,0 +1,31 @@
+# The Docker image that will be used to build your app
+image: swift:5.9
+
+default:
+  cache:  # Cache modules in between jobs
+    key: $CI_COMMIT_REF_SLUG
+    paths:
+      - .build/
+  before_script:
+    - swift package resolve
+
+stages:
+  - test
+  - build
+  - deploy
+
+test:
+  stage: test
+  script:
+    - swift test
+
+format:
+  stage: test
+  script:
+    - swift run swift-format lint -r swift-language-study swift-language-study-tests
+
+build:
+  stage: build
+  script:
+    - swift build
+
