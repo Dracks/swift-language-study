@@ -13,8 +13,6 @@ let package = Package(
         .package(url: "https://github.com/vapor/fluent.git", from: "4.8.0"),
         // 🪶 Fluent driver for SQLite.
         .package(url: "https://github.com/vapor/fluent-sqlite-driver.git", from: "4.0.0"),
-        // 🍃 An expressive, performant, and extensible templating language built for Swift.
-        .package(url: "https://github.com/vapor/leaf.git", from: "4.2.4"),
         .package(url: "https://github.com/binarybirds/swift-html", from: "1.6.0"),
         .package(url: "https://github.com/apple/swift-format", from: "509.0.0"),
     ],
@@ -24,7 +22,6 @@ let package = Package(
             dependencies: [
                 .product(name: "Fluent", package: "fluent"),
                 .product(name: "FluentSQLiteDriver", package: "fluent-sqlite-driver"),
-                .product(name: "Leaf", package: "leaf"),
                 .product(name: "Vapor", package: "vapor"),
                 .product(name: "SwiftHtml", package: "swift-html")
             ],
@@ -40,9 +37,8 @@ let package = Package(
                 .product(name: "Vapor", package: "vapor"),
                 .product(name: "Fluent", package: "Fluent"),
                 .product(name: "FluentSQLiteDriver", package: "fluent-sqlite-driver"),
-                .product(name: "Leaf", package: "leaf"),
             ],
-            path: "swift-language-study-test"
+            path: "swift-language-study-tests"
         )
     ]
 )

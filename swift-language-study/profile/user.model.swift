@@ -1,48 +1,54 @@
-import Vapor
 import Fluent
+import Vapor
 
 final class User: Model, Content {
 
-    static let schema = "users"
+	static let schema = "users"
 
-    @ID(key: .id)
-    var id: UUID?
+	@ID(key: .id)
+	var id: UUID?
 
-    @Field(key: "email")
-    var email: String
+	@Field(key: "email")
+	var email: String
 
-    @Field(key: "password_hash")
-    var passwordHash: String
+	@Field(key: "password_hash")
+	var passwordHash: String
 
-    @Field(key: "name")
-    var name: String?
+	@Field(key: "name")
+	var name: String?
 
-    init() {}
+	@Field(key: "is_admin")
+	var isAdmin: Bool
 
-    init(id: UUID? = nil, email: String="", passwordHash: String = "", name: String? = nil) {
-        self.id = id
-        self.email = email
-        self.passwordHash = passwordHash
-        self.name = name
-    }
+	init() {}
 
-    func setPassword(pwd: String)throws{
-        self.passwordHash = try Bcrypt.hash(pwd)
-    }
+	init(
+		id: UUID? = nil, email: String = "", passwordHash: String = "", name: String? = nil,
+		isAdmin: Bool = false
+	) {
+		self.id = id
+		self.email = email
+		self.passwordHash = passwordHash
+		self.name = name
+		self.isAdmin = isAdmin
+	}
 
-    func verifyPassword(pwd: String) -> Bool{
-        do {
-            return try Bcrypt.verify(pwd, created: self.passwordHash)
-        } catch {
-            return false
-        }
-    }
+	func setPassword(pwd: String) throws {
+		self.passwordHash = try Bcrypt.hash(pwd)
+	}
+
+	func verifyPassword(pwd: String) -> Bool {
+		do {
+			return try Bcrypt.verify(pwd, created: self.passwordHash)
+		} catch {
+			return false
+		}
+	}
 }
 
 extension User: SessionAuthenticatable {
-    typealias SessionID = UUID
-    var sessionID: SessionID {
-        self.id!
-    }
+	typealias SessionID = UUID
+	var sessionID: SessionID {
+		self.id!
+	}
 }
-

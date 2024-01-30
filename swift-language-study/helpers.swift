@@ -1,5 +1,6 @@
-import Vapor 
+import Vapor
 
 func notFoundResponse(req: Request) -> Response {
-    return .init(status: .notFound, body: .init(string: Templates.notFound().render()))
+	return .init(
+		status: .notFound, body: .init(string: Templates(req: req).notFound().render()))
 }
