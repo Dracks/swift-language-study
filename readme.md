@@ -5,10 +5,11 @@
 classDiagram
 class WordType {
     <<enumeration>>
+    article
     noun
     adjective
     verb
-    pronoum
+    pronoun
 }
 
 class WordLevel {
@@ -34,13 +35,22 @@ class RawImport {
 class Word {
     + word String
     + level WordLevel
+    + type WordType
 }
 
+class WordTypeDeclination {
+    + word WordType
+}
 
-class Declination {
-    + type WordType
-    + person String
+class DeclinationType {
+   + type String
+   + order int
+}
+
+class DeclinationTypeCase {
+    + type String
     + case String
+    + order int
 }
 
 class WordDeclination {
@@ -57,12 +67,15 @@ class User {
     + username String
 }
 
-
-RawImport "*" -- "1" Language
+Language "1" -- "*" RawImport
 Word "*" -- "1" Language
+WordTypeDeclination "*" -- "1" Language
 WordDeclination "*" -- "1" Word
-WordDeclination "1" -- "1" Declination
-Language "1" -- "*" Declination
+WordDeclination "*" -- "*" DeclinationTypeCase
+Language "1" -- "*" DeclinationType
+DeclinationType "1" -- "*" DeclinationTypeCase
+
+WordTypeDeclination "*" -- "*" DeclinationType
 
 Word "1" -- "1" UserWord
 UserWord "1" -- "1" User

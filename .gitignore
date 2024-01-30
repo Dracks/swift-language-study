@@ -2,4 +2,5 @@ node_modules
 .build
 .swiftpm
 db.sqlite
+db-testing.sqlite
 
