@@ -82,3 +82,23 @@ UserWord "1" -- "1" User
 
 
 ```
+
+
+## Work status
+
+### Admin Sections
+| Section | Model | Create | Modify | Delete |
+| ------- | ------ | ------ | ------ | ------ |
+| study | raw-import | [X] | [] | [] |
+| study | languages | [X] | [X] | [] | 
+| study | declinations | [X] | [X] | [] |
+| study | words-management | [X] | [] / [X] | [] / [X] |
+| study | word-type <-> declinations | [] | [] | [] |
+| profile | user | [] | [] | [] |
+
+### View Sections
+* [] View random words/declinations filtered by language, level, word-type.
+* [] Auto-complete form with random words.
+* [] Set the correct declination type for the words.
+
+
