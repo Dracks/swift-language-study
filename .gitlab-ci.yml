@@ -3,7 +3,7 @@ image: swift:5.9
 
 variables:
   CI_IMAGE: $CI_REGISTRY/dracks/$CI_PROJECT_NAME
-  PLATFORM: linux/amd64,linux/arm64
+  PLATFORM: linux/amd64
 
 default:
   cache:  # Cache modules in between jobs
@@ -68,6 +68,7 @@ build-image:
     - docker buildx build --push -t "$CI_IMAGE" --platform "$PLATFORM" . --target runtime
   only:
     - main
+    - feature/adding-docker
 
 
 
