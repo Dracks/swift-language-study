@@ -183,7 +183,7 @@ struct WordsManagementController: RouteCollection {
 			)
 			.where(
 				SQLColumn("language_id", table: RawImport.schema), .equal,
-				SQLBind(languageId.uuidString)
+				SQLBind(languageId)
 			)
 			.where(SQLColumn("raw_id", table: Word.schema), .is, SQLLiteral.null)
 			.orderBy(SQLFunction("random"))

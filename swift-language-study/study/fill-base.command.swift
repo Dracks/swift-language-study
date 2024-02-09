@@ -45,7 +45,7 @@ func addBaseDeutsch(app: Application) async throws {
 	let perfectTense = DeclinationTypeCase(typeId: tense.id!, name: "perfect", order: 1)
 	try await perfectTense.save(on: app.db)
 	let preteritumTense = DeclinationTypeCase(typeId: tense.id!, name: "präteritum", order: 2)
-	try await perfectTense.save(on: app.db)
+	try await preteritumTense.save(on: app.db)
 
 	let adjectiveDeclination = DeclinationType(
 		name: "adjective_declination", order: 3, languageID: deutsch.id!)
