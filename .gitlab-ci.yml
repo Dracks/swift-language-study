@@ -38,6 +38,8 @@ test-coverage:
     - pip3 install lcov_cobertura
 #    - wget https://raw.githubusercontent.com/eriwen/lcov-to-cobertura-xml/master/lcov_cobertura/lcov_cobertura.py
     - lcov_cobertura lcov.info
+  except:
+    - tags
     
   artifacts:
     when: always
@@ -54,6 +56,8 @@ format:
   stage: test
   script:
     - swift run swift-format lint -r swift-language-study swift-language-study-tests
+  except:
+    - tags
 
 build-image:
   image: docker:latest
