@@ -38,7 +38,8 @@ class Templates {
 			Html {
 				Head {
 					Title(title)
-					Link(rel: .stylesheet).href("/assets/pico.classless.css")
+					Link(rel: .stylesheet).href("/assets/pico2.min.css")
+					Link(rel: .stylesheet).href("/assets/pico2.colors.min.css")
 					Link(rel: .stylesheet).href("/assets/custom.css")
 					Link(rel: .stylesheet).href(
 						"https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
@@ -47,113 +48,108 @@ class Templates {
 					Meta().charset("UTF-8")
 				}
 				Body {
-					Main {
-						Header {
-							Nav {
-								Ul {
+					Header {
+						Nav {
+							Ul {
+								Li {
+									A("Home").href("/")
+										.role(
+											"button"
+										)
+								}
+								if user?.isAdmin ?? false {
 									Li {
-										A("Home").href("/")
+										Details {
+											Summary(
+												"Admin"
+											)
+											.role(
+												"button"
+											)
+											Ul {
+												Li {
+													A(
+														"Words"
+													)
+													.href(
+														"/words-management/list"
+													)
+												}
+												Li {
+													A(
+														"Languages"
+													)
+													.href(
+														"/languages/"
+													)
+												}
+												Li {
+													A(
+														"Imported words"
+													)
+													.href(
+														"/raw-imports/"
+													)
+												}
+												Li {
+													A(
+														"Variations"
+													)
+													.href(
+														"/declinations-form/edit"
+													)
+												}
+											}
+										}.class("dropdown")
+									}
+								}
+							}
+
+							Ul {
+								if user == nil {
+									Li {
+										A("Login")
+											.href(
+												"/login"
+											)
 											.role(
 												"button"
 											)
 									}
-									if user?.isAdmin ?? false {
-										Li {
-											Details {
-												Summary(
-													"Admin"
-												)
-												.role(
-													"button"
-												)
-												.attribute(
-													"aria-haspopup",
-													"listbox"
-												)
-												Ul {
-													Li
-													{
-														A(
-															"Words"
-														)
-														.href(
-															"/words-management/list"
-														)
-													}
-													Li
-													{
-														A(
-															"Languages"
-														)
-														.href(
-															"/languages/"
-														)
-													}
-													Li
-													{
-														A(
-															"Imported words"
-														)
-														.href(
-															"/raw-imports/"
-														)
-													}
-													Li
-													{
-														A(
-															"Variations"
-														)
-														.href(
-															"/declinations-form/edit"
-														)
-													}
-												}
-												.role(
-													"listbox"
-												)
-											}.role(
-												"list"
+								} else {
+									Li {
+										A("Profile")
+											.href(
+												"/profile"
 											)
-										}
+											.role(
+												"button"
+											)
 									}
-								}
-
-								Ul {
-									if user == nil {
-										Li {
-											A("Login")
-												.href(
-													"/login"
-												)
-												.role(
-													"button"
-												)
-										}
-									} else {
-										Li {
-											A("Profile")
-												.href(
-													"/profile"
-												)
-												.role(
-													"button"
-												)
-										}
-										Li {
-											A("Logout")
-												.href(
-													"/logout"
-												)
-												.role(
-													"button"
-												)
-										}
+									Li {
+										A("Logout")
+											.href(
+												"/logout"
+											)
+											.role(
+												"button"
+											)
+											.class(
+												"danger"
+											)
 									}
 								}
 							}
 						}
+					}.class("container")
+					Main {
 						content
-					}
+					}.class("container")
+					Footer {
+						A("Swift language study").href(
+							"https://gitlab.com/dracks/swift-language-study"
+						)
+					}.class("container")
 				}
 			}
 		}
@@ -242,5 +238,38 @@ extension Tag {
 extension Tag {
 	public func htmx(_ key: String, _ value: String) -> Tag {
 		return self.attribute("hx-\(key)", value)
+	}
+}
+
+class HomeTemplates: Templates {
+	func home() -> Document {
+		if let user = user {
+			return layout(
+				title: "Welcome back \(user.name ?? "")",
+				content: Article {
+					H2("Welcome back \(user.name ?? "")")
+					H3("Exercices")
+					Ul {
+						Li {
+							A("Show random words").href(
+								"/exercises/random-words")
+						}
+					}
+				})
+		}
+		return layout(
+			title: "Welcome",
+			content: Article {
+				H2("Welcome to the swift language study project")
+				H3("What is swift language study?")
+				P(
+					"Is a project made and dessigned to learn all possible declinations of language"
+				)
+				P(
+					"With base on the german language, and his huge amount of declinations I decided to create some small project to make easy to study the words declinations randomly on base of the words from my classes book"
+				)
+
+			})
+
 	}
 }

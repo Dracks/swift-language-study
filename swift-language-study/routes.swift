@@ -1,6 +1,8 @@
 import Fluent
 import Vapor
 
+import struct SwiftHtml.Document
+
 struct ErrorHandlerMiddleware: AsyncMiddleware {
 	func respond(to request: Request, chainingTo next: AsyncResponder) async throws -> Response
 	{
@@ -33,4 +35,9 @@ func routes(_ app: Application) throws {
 	try app.register(collection: RawImportsController(app: app))
 	try app.register(collection: DeclinationTypeController())
 	try app.register(collection: WordsManagementController())
+	try app.register(collection: ExercisesController())
+
+	app.get { req -> Document in
+		return HomeTemplates(req: req).home()
+	}
 }

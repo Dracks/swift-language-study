@@ -1,17 +1,17 @@
 import Fluent
-import FluentSQLiteDriver
 import FluentPostgresDriver
+import FluentSQLiteDriver
 import NIOSSL
 import Vapor
 
 func configureDb(_ app: Application) async throws {
 	switch Environment.get("DB_TYPE") {
 	case "POSTGRES":
-        let dbUrl = Environment.get("DB_URL")
-        guard let dbUrl = dbUrl else {
-            throw GenericError(msg: "DB_URL must be defined for DB_TYPE postgress")
-        }
-        app.databases.use(try DatabaseConfigurationFactory.postgres(url: dbUrl), as: .psql)
+		let dbUrl = Environment.get("DB_URL")
+		guard let dbUrl = dbUrl else {
+			throw GenericError(msg: "DB_URL must be defined for DB_TYPE postgress")
+		}
+		app.databases.use(try DatabaseConfigurationFactory.postgres(url: dbUrl), as: .psql)
 	default:
 		let dbName = Environment.get("DB_NAME") ?? "db.sqlite"
 		if dbName != "memory" {

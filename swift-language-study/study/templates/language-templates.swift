@@ -1,7 +1,7 @@
 import SwiftHtml
 import Vapor
 
-extension Templates {
+class LanguageTemplates: Templates {
 	func listLanguages(languages: [Language]) -> Document {
 		return layout(
 			title: "Languages",

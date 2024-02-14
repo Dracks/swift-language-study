@@ -22,12 +22,12 @@ struct LanguageController: RouteCollection {
 	// Obté tots els idiomes
 	func getAll(req: Request) async throws -> Document {
 		let languages = try await Language.query(on: req.db).all()
-		return Templates(req: req).listLanguages(languages: languages)
+		return LanguageTemplates(req: req).listLanguages(languages: languages)
 	}
 
 	// Obté un idioma per ID
 	func getOne(req: Request) async throws -> Response {
-		let templates = Templates(req: req)
+		let templates = LanguageTemplates(req: req)
 		let languageID = try req.parameters.require("id", as: UUID.self)
 		let language = try await Language.query(on: req.db)
 			.filter(\.$id == languageID)

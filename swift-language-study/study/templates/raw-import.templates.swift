@@ -1,6 +1,6 @@
 import FluentKit
-import SwiftHtml
 import Foundation
+import SwiftHtml
 
 extension Templates {
 	func selectStudyLanguage(languages: [Language], selected: UUID? = nil) -> Select {

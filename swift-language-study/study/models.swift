@@ -107,6 +107,16 @@ final class Word: Model {
 		}
 		self.$language.id = languageID
 	}
+
+	func selectDeclination(match declinations: [DeclinationTypeCase]) -> WordDeclination? {
+
+		let decIds = Set(declinations.map { $0.id })
+
+		return self.declinations.filter { dec in
+			let decCaseIds = Set(dec.declinationCase.map { $0.id })
+			return decCaseIds.isSubset(of: decIds)
+		}.first
+	}
 }
 
 final class DeclinationType: Model {
