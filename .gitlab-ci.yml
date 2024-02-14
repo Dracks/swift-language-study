@@ -10,6 +10,9 @@ default:
     key: $CI_COMMIT_REF_SLUG
     paths:
       - .build/
+  #before_script:
+  #  - if [ -e /usr/bin/swift ]; then echo "Swift process"; fi
+  #  - if [ -e /usr/bin/swift ]; then swift package --cache-path .build/cache; fi
 
 stages:
   - test
