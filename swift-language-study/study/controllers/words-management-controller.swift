@@ -12,6 +12,14 @@ struct WordsManagementController: RouteCollection {
 		var rawWordId: UUID?
 	}
 
+	struct EditFormData: Content {
+		var wordId: UUID
+		var word: String
+		var wordLevel: WordLevel?
+		var wordType: WordType
+		var rawWordId: UUID?
+	}
+
 	struct EditDeclinationData: Content {
 		var declinationId: UUID?
 		var declination: String
@@ -27,6 +35,7 @@ struct WordsManagementController: RouteCollection {
 		wordsRoutes.get("new-word", use: newWord)
 		wordsRoutes.post("new-word", use: newWordPost)
 		wordsRoutes.get("edit-word", ":wordId", use: editWord)
+		wordsRoutes.post("edit-word", use: editWordPost)
 		wordsRoutes.post("edit-declination", use: editDeclination)
 		wordsRoutes.get("get-form", use: newWordForm)
 		wordsRoutes.grouped("select-raw-import").get(
@@ -124,6 +133,30 @@ struct WordsManagementController: RouteCollection {
 		return templates.editWordForm(word: word, withDeclinations: declinations)
 	}
 
+	func editWordPost(req: Request) async throws -> Document {
+		let templates = WordsManagementTemplates(req: req)
+		let formData = try req.content.decode(EditFormData.self)
+		let word = try await Word.query(on: req.db)
+			.filter(\.$id == formData.wordId)
+			.with(\.$declinations) { dec in
+				dec.with(\.$declinationCase)
+			}
+			.with(\.$language).first()
+
+		guard let word = word else {
+			return templates.notFound()
+		}
+
+		let wordTypeDeclinations = try await WordTypeDeclination.getInfo(
+			on: req.db, forType: word.type, andLanguage: word.$language.id)
+
+		let declinations = try wordTypeDeclinations.map { wordTypeDec in
+			try wordTypeDec.requireID().declinationType
+		}
+
+		return templates.partialEditWord(word: word, withDeclinations: declinations)
+	}
+ 
 	func editDeclination(req: Request) async throws -> Document {
 		let formData = try req.content.decode(EditDeclinationData.self)
 		let templates = WordsManagementTemplates(req: req)

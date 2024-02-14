@@ -47,6 +47,7 @@ class WordsManagementTests: AbstractBaseTestsClass {
 			.GET,
 			"/words-management/select-raw-import/random/\(try deutsch.requireID())")
 
+		XCTAssertFalse(res.body.string.contains("name=\"rawWordId\""))
 		// I dropped the field, need to rething this test
 		//XCTAssertContains(
 		//	res.body.string, renderTag(Input().name("rawWordId").type(.hidden)))
