@@ -1,3 +1,36 @@
+main {
+    min-height: 60vh;
+}
+
+body > footer {
+    text-align: center;
+}
+
+
+.danger:is(button,input[type=submit],input[type=button],[role=button]) {
+    background-color: var(--pico-color-orange-600);
+    border-color: var(--pico-color-orange-600);
+}
+
+.outline.danger:is(button,input[type=submit],input[type=button],[role=button]) {
+    background-color: transparent;
+    color: var(--pico-color-orange-600);
+}
+
+main > .small-form {
+    max-width: 510px;
+    margin: 0 auto;
+}
+
+main > .medium-form {
+    max-width: 726px;
+    margin: 0 auto;
+}
+
+/* Specific screens */
+
 .login {
-    max-width: 400px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }

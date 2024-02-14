@@ -47,7 +47,7 @@ final class BaseTests: XCTestCase {
 			afterResponse: { res in
 				XCTAssertContains(
 					res.body.string,
-					"<summary role=\"button\" aria-haspopup=\"listbox\">Admin</summary>"
+					"<summary role=\"button\">Admin</summary>"
 				)
 			})
 	}

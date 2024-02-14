@@ -4,7 +4,7 @@ extension Templates {
 	func login(username: String, redirect: String?, error: String? = nil) -> Document {
 		return layout(
 			title: "Log in",
-			content: Main {
+			content:
 				Article {
 					H1("Login")
 					Form {
@@ -24,8 +24,7 @@ extension Templates {
 						Button("Login").type(.submit)
 
 					}.method(.post)
-				}
-			}.class("login")
+				}.class("login", "small-form")
 		)
 	}
 

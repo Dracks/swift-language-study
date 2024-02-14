@@ -12,37 +12,33 @@ func listCaseWithControls(cases: [DeclinationTypeCase], decTypeId: UUID) -> Tag 
 	Ul {
 		Span("Existing cases")
 		Input().type(.hidden).name("dec-type-id").value(decTypeId.uuidString)
-		for decCase in cases {
-			Li {
-				Span {
-					Span().class("fa fa-arrow-up")
-				}.role("button").class("secondary")
-					.htmx(
-						"put",
-						"/declinations-form/case/\(decCase.id?.uuidString ?? "---")/-1"
-					)
-					.htmx("target", "#cases-list")
-					.htmx("include", "[name='dec-type-id']")
-				Span {
-					Span().class("fa fa-arrow-down")
-				}.role("button").class("secondary")
-					.htmx(
-						"put",
-						"/declinations-form/case/\(decCase.id?.uuidString ?? "---")/1"
-					)
-					.htmx("target", "#cases-list")
-					.htmx("include", "[name='dec-type-id']")
-				Span {
-					Span().class("fa fa-trash")
-				}.class("button-red").role("button")
-					.htmx(
-						"delete",
-						"/declinations-form/case/\(decCase.id?.uuidString ?? "---")"
-					)
-					.htmx("target", "#cases-list")
-					.htmx("include", "[name='dec-type-id']")
-				Span(decCase.name)
+		Ul {
+			for decCase in cases {
+				Li {
+					Span().class("fa fa-arrow-up", "secondary").role("button")
+						.htmx(
+							"put",
+							"/declinations-form/case/\(decCase.id?.uuidString ?? "---")/-1"
+						)
+						.htmx("target", "#cases-list")
+						.htmx("include", "[name='dec-type-id']")
+					Span().class("fa fa-arrow-down", "secondary").role("button")
+						.htmx(
+							"put",
+							"/declinations-form/case/\(decCase.id?.uuidString ?? "---")/1"
+						)
+						.htmx("target", "#cases-list")
+						.htmx("include", "[name='dec-type-id']")
+					Span().class("fa fa-trash", "danger").role("button")
+						.htmx(
+							"delete",
+							"/declinations-form/case/\(decCase.id?.uuidString ?? "---")"
+						)
+						.htmx("target", "#cases-list")
+						.htmx("include", "[name='dec-type-id']")
+					Span(decCase.name)
 
+				}
 			}
 		}
 	}.htmx("target", "#cases-list")

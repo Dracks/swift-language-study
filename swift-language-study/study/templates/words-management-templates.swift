@@ -3,23 +3,9 @@ import SwiftHtml
 import Vapor
 
 class WordsManagementTemplates: Templates {
-	private func selectWordType(_ type: WordType?) -> Select {
-		// Todo select word type from word
-		return Select {
-			Option("Select type")
-			Option("Article").value(WordType.article.rawValue).selected(
-				type == .article)
-			Option("Adjective").value(WordType.adjective.rawValue).selected(
-				type == .adjective)
-			Option("Noun").value(WordType.noun.rawValue).selected(type == .noun)
-			Option("Pronoun").value(WordType.pronoun.rawValue).selected(
-				type == .pronoun)
-			Option("Verb").value(WordType.verb.rawValue).selected(type == .verb)
-		}
-	}
 	private func rawWordControls(language: Language) -> Tag {
 		return Div {
-			A("Search Raw Word").role("button")
+			A("Search Raw Word").role("button").class("secondary")
 			Span("Select unassigned Raw Word")
 				.role("button")
 				.htmx(
@@ -28,7 +14,7 @@ class WordsManagementTemplates: Templates {
 				)
 				.htmx("target", "#raw-import-word")
 				.htmx("swap", "outerHTML")
-			A("Delete word").role("button")
+			A("Delete word").role("button").class("danger")
 		}
 	}
 	private func emptyRaw(language: Language) -> Tag {
@@ -164,14 +150,9 @@ class WordsManagementTemplates: Templates {
 		forDeclinations declinations: [DeclinationTypeCase]
 	) -> Tag {
 
-		let decIds = Set(declinations.map { $0.id })
-
-		let current = word.declinations.filter { dec in
-			let decCaseIds = Set(dec.declinationCase.map { $0.id })
-			return decCaseIds.isSubset(of: decIds)
-		}.first
 		return renderDecForm(
-			declination: current, wordId: word.id, forDeclinations: declinations)
+			declination: word.selectDeclination(match: declinations), wordId: word.id,
+			forDeclinations: declinations)
 	}
 
 	func renderDeclinationForms(
@@ -268,5 +249,22 @@ class WordsManagementTemplates: Templates {
 			renderDecForm(
 				declination: declination, wordId: wordId,
 				forDeclinations: declinationstypes))
+	}
+}
+
+extension Templates {
+	func selectWordType(_ type: WordType? = nil) -> Select {
+		// Todo select word type from word
+		return Select {
+			Option("Select type")
+			Option("Article").value(WordType.article.rawValue).selected(
+				type == .article)
+			Option("Adjective").value(WordType.adjective.rawValue).selected(
+				type == .adjective)
+			Option("Noun").value(WordType.noun.rawValue).selected(type == .noun)
+			Option("Pronoun").value(WordType.pronoun.rawValue).selected(
+				type == .pronoun)
+			Option("Verb").value(WordType.verb.rawValue).selected(type == .verb)
+		}
 	}
 }
