@@ -125,9 +125,11 @@ class WordsManagementTemplates: Templates {
 	}
 
 	func renderDecForm(
-		declination current: WordDeclination?, wordId: UUID?,
-		forDeclinations declinations: [DeclinationTypeCase]
+		word: Word,
+		forDeclinations declinations: [DeclinationTypeCase],
+        withTabIndex tabIndex: Int
 	) -> Tag {
+        let current = word.selectDeclination(match: declinations)
 		return Form {
 			for declination in declinations {
 				Input().type(.hidden).name("declinationTypeIds[]").value(
@@ -138,27 +140,20 @@ class WordsManagementTemplates: Templates {
 				Input().type(.hidden).name("declinationId").value(
 					current.id?.uuidString)
 			}
-			Input().type(.hidden).name("wordId").value(wordId?.uuidString)
-			Input().name("declination").value(current?.text ?? "")
+            Input().type(.hidden).name("wordId").value(word.id?.uuidString)
+            Input().type(.hidden).name("tabIndex").value(String(tabIndex))
+            Input().name("declination").value(current?.text ?? "").tabindex(tabIndex)
 		}.htmx("post", "/words-management/edit-declination")
 			.htmx("swap", "outerHTML")
 			.htmx("trigger", "change")
 	}
 
-	func renderDecForm(
-		word: Word,
-		forDeclinations declinations: [DeclinationTypeCase]
-	) -> Tag {
-
-		return renderDecForm(
-			declination: word.selectDeclination(match: declinations), wordId: word.id,
-			forDeclinations: declinations)
-	}
 
 	func renderDeclinationForms(
 		word: Word, firstDeclination vertical: DeclinationType,
 		secondDeclination horizontal: DeclinationType
 	) -> Tag {
+        let vertCasesSize = vertical.cases.count
 		return Table {
 			Tr {
 				Th()
@@ -166,16 +161,19 @@ class WordsManagementTemplates: Templates {
 					Th(horCase.name)
 				}
 			}
-			for vertCase in vertical.cases {
+            for (i, vertCase) in vertical.cases.enumerated() {
 				Tr {
 					Th(vertCase.name)
-					for horCase in horizontal.cases {
+                    for (j,horCase) in horizontal.cases.enumerated() {
 						Td {
-							renderDecForm(
+							/*renderDecForm(
 								word: word,
 								forDeclinations: [
 									vertCase, horCase,
-								])
+								])*/
+                            renderDecForm(
+                                word: word,
+                                forDeclinations:  [vertCase, horCase], withTabIndex: vertCasesSize*j+i+1)
 						}
 					}
 				}
@@ -193,13 +191,14 @@ class WordsManagementTemplates: Templates {
 				Th()
 
 			}
-			for vertCase in declination.cases {
+            for (i,vertCase) in declination.cases.enumerated() {
 				Tr {
 					Th(vertCase.name)
 
 					Td {
-						renderDecForm(
-							word: word, forDeclinations: [vertCase])
+                        renderDecForm(
+                            word: word,
+                            forDeclinations:  [vertCase], withTabIndex: i+1)
 					}
 				}
 			}
@@ -241,14 +240,15 @@ class WordsManagementTemplates: Templates {
 			})
 	}
 
-	func partialEditDeclinationForm(
-		declination: WordDeclination?, wordId: UUID,
-		withDeclinations declinationstypes: [DeclinationTypeCase]
+	func partialEditDeclinationForm(word: Word,
+		withDeclinations declinationstypes: [DeclinationTypeCase],
+        tabIndex: Int
 	) -> Document {
 		return htmx(
-			renderDecForm(
-				declination: declination, wordId: wordId,
-				forDeclinations: declinationstypes))
+			renderDecForm(word: word, forDeclinations: declinationstypes,
+                 withTabIndex: tabIndex
+            )
+        )
 	}
 }
 

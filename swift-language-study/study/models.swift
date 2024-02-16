@@ -85,8 +85,8 @@ final class Word: Model {
 	@Parent(key: "language_id")
 	var language: Language
 
-	@Parent(key: "raw_id")
-	var raw: RawImport
+	@OptionalParent(key: "raw_id")
+	var raw: RawImport?
 
 	@Children(for: \.$word)
 	var declinations: [WordDeclination]
