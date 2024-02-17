@@ -5,7 +5,7 @@ import SwiftHtml
 extension Templates {
 	func selectStudyLanguage(languages: [Language], selected: UUID? = nil) -> Select {
 		return Select {
-			Option("Select the language")
+            Option("Select the language").value("")
 			for language in languages {
 				Option(language.name).value(language.id!.uuidString).selected(
 					language.id == selected)
@@ -15,7 +15,7 @@ extension Templates {
 
 	func seletctWordLevel(selected: WordLevel? = nil) -> Select {
 		return Select {
-			Option("Select word level")
+            Option("Select word level").value("")
 			for wordLevel in WordLevel.allCases {
 				Option(wordLevel.rawValue).value(wordLevel.rawValue).selected(
 					wordLevel == selected)

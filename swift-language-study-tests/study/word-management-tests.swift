@@ -5,14 +5,6 @@ import XCTVapor
 @testable import App
 
 class WordsManagementTests: AbstractBaseTestsClass {
-	private func getDeutsch() async throws -> Language {
-		let deutsch = try await Language.query(on: app!.db).filter(\.$name == "Deutsch")
-			.first()
-		guard let deutsch = deutsch else {
-			throw TestError()
-		}
-		return deutsch
-	}
     
     func testListWords() async throws {
         let deutsch = try await getDeutsch()
