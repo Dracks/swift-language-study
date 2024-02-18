@@ -19,7 +19,7 @@ func createUsers(app: Application) async throws {
 
 func loginWithUser(app: Application, user: String, password: String) async throws -> String {
 	let res = try app.sendRequest(.POST, "/login") { req in
-		try req.content.encode(["username": "j@k.com", "password": "admin"])
+		try req.content.encode(["username": user, "password": password])
 	}
 	XCTAssertEqual(res.headers.contains(name: "set-cookie"), true)
 	let cookiesList: [String] = res.headers["set-cookie"]
@@ -54,6 +54,6 @@ func createSampleWords(app: Application, language: UUID) async throws {
         "ist": ["er/sie/es", "present"]
     ], on: app.db)
     
-    try await genericWordSampleCreation(languageId: language, word: "Schwäche", level: .A2, type: .noun, declinations: [:], on: app.db)
+    try await genericWordSampleCreation(languageId: language, word: "Schwäche", level: .B1, type: .noun, declinations: [:], on: app.db)
     
 }

@@ -256,7 +256,7 @@ extension Templates {
 	func selectWordType(_ type: WordType? = nil) -> Select {
 		// Todo select word type from word
 		return Select {
-			Option("Select type")
+            Option("Select type").value("")
 			Option("Article").value(WordType.article.rawValue).selected(
 				type == .article)
 			Option("Adjective").value(WordType.adjective.rawValue).selected(

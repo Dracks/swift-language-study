@@ -89,9 +89,9 @@ class ExercisesTemplates: Templates {
 				Input().type(.hidden).name("language").value(
 					query.language.uuidString)
 				Input().type(.hidden).name("level").value(
-					query.wordLevel?.rawValue ?? "")
+					query.level?.rawValue ?? "")
 				Input().type(.hidden).name("type").value(
-					query.wordType?.rawValue ?? "")
+					query.type?.rawValue ?? "")
 				Button("Next")
 			}.htmx("post", "/exercises/random-words")
 		])

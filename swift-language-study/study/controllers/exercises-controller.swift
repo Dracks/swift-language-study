@@ -6,8 +6,30 @@ class ExercisesController: RouteCollection {
 
 	struct RandomWordQuery: Content {
 		var language: UUID
-		var wordLevel: WordLevel?
-		var wordType: WordType?
+		var level: WordLevel?
+		var type: WordType?
+        
+        init(from decoder: Decoder) throws {
+            let container: KeyedDecodingContainer<ExercisesController.RandomWordQuery.CodingKeys> = try decoder.container(keyedBy: ExercisesController.RandomWordQuery.CodingKeys.self)
+            self.language = try container.decode(UUID.self, forKey: ExercisesController.RandomWordQuery.CodingKeys.language)
+            let levelString = try container.decodeIfPresent(String.self, forKey: .level)
+            if let levelString = levelString {
+                if !levelString.isEmpty{
+                    self.level = try container.decode(WordLevel.self, forKey: .level)
+                }
+            }
+            let typeString = try container.decodeIfPresent(String.self, forKey: .type)
+            if let typeString = typeString {
+                if !typeString.isEmpty {
+                    self.type = try container.decode(WordType.self, forKey: .type)
+                }
+            }
+        }
+        init(language: UUID, level: WordLevel? = nil, type: WordType? = nil) {
+            self.language = language
+            self.level = level
+            self.type = type
+        }
 	}
 	func boot(routes: RoutesBuilder) throws {
 		let exercisesRoute = routes.grouped("exercises").grouped([
@@ -24,15 +46,16 @@ class ExercisesController: RouteCollection {
 
 	func nextRandomWord(req: Request) async throws -> Document {
 		let templates = ExercisesTemplates(req: req)
-		let data = try req.content.decode(RandomWordQuery.self)
+        
+        let data = try req.content.decode(RandomWordQuery.self)
 
 		var dbQuery = Word.query(on: req.db).filter(\.$language.$id == data.language)
 
-		if let wordLevel = data.wordLevel {
+		if let wordLevel = data.level {
 			dbQuery = dbQuery.filter(\.$level == wordLevel)
 		}
 
-		if let wordType = data.wordType {
+		if let wordType = data.type {
 			dbQuery = dbQuery.filter(\.$type == wordType)
 		}
 
