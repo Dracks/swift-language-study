@@ -2,12 +2,16 @@ FROM swift:5.9 AS base
 
 FROM base AS build
 
+ARG VERSION
+ARG GIT_COMMIT
+
 COPY ./Package.* ./
 COPY swift-language-study swift-language-study
 COPY swift-language-study-tests swift-language-study-tests
 COPY .build .build
 
 # RUN swift package resolve --skip-update --force-resolved-versions
+RUN echo "struct BuildInfo { static let version = \"$VERSION\"; static let gitCommit = \"$GIT_COMMIT\" }" > swift-language-study/build-info.swift
 
 
 RUN swift build -c release --static-swift-stdlib \

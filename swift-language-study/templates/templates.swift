@@ -146,9 +146,17 @@ class Templates {
 						content
 					}.class("container")
 					Footer {
-						A("Swift language study").href(
-							"https://gitlab.com/dracks/swift-language-study"
-						)
+                        Div{
+                            A("Swift language study").href(
+                                "https://gitlab.com/dracks/swift-language-study"
+                            )
+                        }
+                        Div{
+                            Small("Version: \(BuildInfo.version) (\(BuildInfo.gitCommit))")
+                        }
+                        Div{
+                            Small("Jaume Singla Valls")
+                        }
 					}.class("container")
 				}
 			}
