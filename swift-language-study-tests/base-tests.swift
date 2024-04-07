@@ -7,9 +7,9 @@ final class BaseTests: AbstractBaseTestsClass {
 
 		let res = try await getApp().sendRequest(
 			.GET, "hello")
-        
-        XCTAssertEqual(res.status, .notFound)
-        XCTAssertContains(res.body.string, "Not found")
+
+		XCTAssertEqual(res.status, .notFound)
+		XCTAssertContains(res.body.string, "Not found")
 	}
 
 	func testLogin() async throws {
@@ -20,28 +20,28 @@ final class BaseTests: AbstractBaseTestsClass {
 			beforeRequest: { req in
 				try req.content.encode(["username": "j@k.com", "password": "admin"])
 			})
-        XCTAssertEqual(res.status, .seeOther)
-        XCTAssertEqual(res.headers.contains(name: "location"), true)
-        let location: [String] = res.headers["location"]
-        XCTAssertEqual(location, ["/profile"])
+		XCTAssertEqual(res.status, .seeOther)
+		XCTAssertEqual(res.headers.contains(name: "location"), true)
+		let location: [String] = res.headers["location"]
+		XCTAssertEqual(location, ["/profile"])
 	}
 
 	func testAdminLayout() async throws {
 
-        let res = try await requestWithAdmin(
+		let res = try await requestWithAdmin(
 			.GET, "/profile"
-			)
-        XCTAssertContains(
-            res.body.string,
-            "<summary role=\"button\">Admin</summary>"
-        )
+		)
+		XCTAssertContains(
+			res.body.string,
+			"<summary role=\"button\">Admin</summary>"
+		)
 	}
-    
-    func testUserHomeScreen() async throws {
-        let res = try await requestWithUser(.GET, "/")
-        
-        XCTAssertContains(res.body.string, "<h2>Welcome back demo</h2>")
-        
-    }
+
+	func testUserHomeScreen() async throws {
+		let res = try await requestWithUser(.GET, "/")
+
+		XCTAssertContains(res.body.string, "<h2>Welcome back demo</h2>")
+
+	}
 
 }

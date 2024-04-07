@@ -5,16 +5,16 @@ import XCTVapor
 @testable import App
 
 class WordsManagementTests: AbstractBaseTestsClass {
-    
-    func testListWords() async throws {
-        let deutsch = try await getDeutsch()
-        let app = try getApp()
-        try await createSampleWords(app: app, language: try deutsch.requireID())
-        
-        let res = try await requestWithAdmin(.GET, "/words-management/list")
-        
-        XCTAssertContains(res.body.string,"<td>Haus</td>")
-    }
+
+	func testListWords() async throws {
+		let deutsch = try await getDeutsch()
+		let app = try getApp()
+		try await createSampleWords(app: app, language: try deutsch.requireID())
+
+		let res = try await requestWithAdmin(.GET, "/words-management/list")
+
+		XCTAssertContains(res.body.string, "<td>Haus</td>")
+	}
 
 	func testNewWordForm() async throws {
 		// let app = try getApp()
@@ -29,8 +29,8 @@ class WordsManagementTests: AbstractBaseTestsClass {
 			body,
 			"<form id=\"wordForm\" hx-post=\"/words-management/new-word\" hx-include=\".extra-fields\">"
 		)
-		XCTAssertContains(body, "<select name=\"wordLevel\" id=\"wordLevel\">")
-		XCTAssertContains(body, "<select name=\"wordType\" id=\"wordType\" required>")
+		XCTAssertContains(body, "<select name=\"wordLevel\" id=\"wordLevel\" tabindex=\"6\">")
+		XCTAssertContains(body, "<select name=\"wordType\" id=\"wordType\" required tabindex=\"7\">")
 		XCTAssertContains(body, "<div id=\"declinations-table\"></div>")
 
 	}
@@ -159,8 +159,8 @@ class WordsManagementTests: AbstractBaseTestsClass {
 			.POST, "words-management/edit-declination"
 		) { req in
 			let formData = WordsManagementController.EditDeclinationData(
-                tabIndex: -1,
-                declination: "kaufst",
+				tabIndex: -1,
+				declination: "kaufst",
 				declinationTypeIds: [
 					try you.requireID(),
 					try present.requireID(),
@@ -200,7 +200,7 @@ class WordsManagementTests: AbstractBaseTestsClass {
 			.POST, "words-management/edit-declination"
 		) { req in
 			let formData = WordsManagementController.EditDeclinationData(
-                tabIndex: 0,
+				tabIndex: 0,
 				declinationId: declinationId,
 				declination: "kaufe",
 				declinationTypeIds: [
@@ -217,7 +217,8 @@ class WordsManagementTests: AbstractBaseTestsClass {
 			"<input type=\"hidden\" name=\"declinationId\" value=\"\(declinationId.uuidString)\">"
 		)
 		XCTAssertContains(
-			response.body.string, "<input name=\"declination\" value=\"kaufe\" tabindex=\"0\">")
+			response.body.string,
+			"<input name=\"declination\" value=\"kaufe\" tabindex=\"0\">")
 	}
 
 	func testDeleteDeclination() async throws {
@@ -243,7 +244,7 @@ class WordsManagementTests: AbstractBaseTestsClass {
 			.POST, "words-management/edit-declination"
 		) { req in
 			let formData = WordsManagementController.EditDeclinationData(
-                tabIndex: 3,
+				tabIndex: 3,
 				declinationId: declinationId,
 				declination: "",
 				declinationTypeIds: [
@@ -257,6 +258,8 @@ class WordsManagementTests: AbstractBaseTestsClass {
 			\.$id == declinationId
 		).count()
 		XCTAssertEqual(count, 0)
-		XCTAssertContains(response.body.string, "<input name=\"declination\" value=\"\" tabindex=\"3\">")
+		XCTAssertContains(
+			response.body.string,
+			"<input name=\"declination\" value=\"\" tabindex=\"3\">")
 	}
 }
