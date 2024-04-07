@@ -180,7 +180,7 @@ class WordsManagementTemplates: Templates {
 									vertCase, horCase,
 								],
 								withTabIndex: vertCasesSize * j + i
-									+ 10)
+									+ 9)
 						}
 					}
 				}
@@ -206,7 +206,7 @@ class WordsManagementTemplates: Templates {
 						renderDecForm(
 							word: word,
 							forDeclinations: [vertCase],
-							withTabIndex: i + 10)
+							withTabIndex: i + 9)
 					}
 				}
 			}

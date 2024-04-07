@@ -90,15 +90,16 @@ UserWord "1" -- "1" User
 | Section | Model | Create | Modify | Delete |
 | ------- | ------ | ------ | ------ | ------ |
 | study | raw-import | [X] | [] | [] |
-| study | languages | [X] | [X] | [] | 
+| study | languages | [X] | [X] | [] |
 | study | declinations | [X] | [X] | [] |
 | study | words-management | [X] | [] / [X] | [] / [X] |
 | study | word-type <-> declinations | [] | [] | [] |
-| profile | user | [] | [] | [] |
+| profile | user | [x] | [x] | [] |
 
 ### View Sections
 * [] View random words/declinations filtered by language, level, word-type.
 * [] Auto-complete form with random words.
 * [] Set the correct declination type for the words.
 
-
+### Todo
+* Handle Profile/User errors with an enum, the view/template can transform into error messages

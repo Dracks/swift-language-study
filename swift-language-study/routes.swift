@@ -30,7 +30,9 @@ func routes(_ app: Application) throws {
 	app.middleware.use(SessionsMiddleware(session: app.sessions.driver))
 	app.middleware.use(UserSessionAuthenticator())
 
+	try app.register(collection: LoginController(app: app))
 	try app.register(collection: ProfileController(app: app))
+	try app.register(collection: AdminUsersController())
 	try app.register(collection: LanguageController(app: app))
 	try app.register(collection: RawImportsController(app: app))
 	try app.register(collection: DeclinationTypeController())

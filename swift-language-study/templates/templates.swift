@@ -24,6 +24,9 @@ class Templates {
 		return Div {
 			Label(label).attribute("for", name)
 			input
+			if let error = error {
+				Div(error).class("error")
+			}
 		}
 	}
 
@@ -102,6 +105,14 @@ class Templates {
 													)
 													.href(
 														"/declinations-form/edit"
+													)
+												}
+												Li {
+													A(
+														"Users"
+													)
+													.href(
+														"/users/"
 													)
 												}
 											}

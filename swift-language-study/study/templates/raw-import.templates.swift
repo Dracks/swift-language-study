@@ -88,7 +88,7 @@ class RawImportTemplates: Templates {
 						languages: languages, selected: selectedLanguage
 					).name("languageID")
 
-					Label("Select the level").for("word-level")
+					Label("Select the level").for("wordLevel")
 					seletctWordLevel(selected: wordLevel).name("wordLevel")
 
 					Label("Words (separated by comma)").for("words")
