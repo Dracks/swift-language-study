@@ -21,7 +21,7 @@ struct WordsManagementController: RouteCollection {
 	}
 
 	struct EditDeclinationData: Content {
-        var tabIndex: Int
+		var tabIndex: Int
 		var declinationId: UUID?
 		var declination: String
 		var declinationTypeIds: [UUID]
@@ -157,55 +157,61 @@ struct WordsManagementController: RouteCollection {
 
 		return templates.partialEditWord(word: word, withDeclinations: declinations)
 	}
- 
+
 	func editDeclination(req: Request) async throws -> Document {
-        do {
-            let formData = try req.content.decode(EditDeclinationData.self)
-            let templates = WordsManagementTemplates(req: req)
-            
-            // Todo validate the IDs
-            let declinationTypeCases = try await DeclinationTypeCase.query(on: req.db).filter(
-                \.$id ~~ formData.declinationTypeIds
-            ).all()
-            
-            let word: Word? = try await Word.query(on: req.db).filter(\.$id == formData.wordId).first()
-            guard let word = word else {
-                return templates.notFound()
-            }
-            
-            if let decId = formData.declinationId {
-                let declination = try await WordDeclination.query(on: req.db).filter(
-                    \.$id == decId
-                ).first()
-                guard let dec = declination else {
-                    return templates.notFound()
-                }
-                
-                if formData.declination.isEmpty {
-                    try await dec.delete(on: req.db)
-                } else {
-                    dec.text = formData.declination
-                    try await dec.save(on: req.db)
-                }
-                
-            } else if !formData.declination.isEmpty {
-                let dec = WordDeclination(
-                    text: formData.declination, wordID: formData.wordId)
-                try await dec.save(on: req.db)
-                try await dec.$declinationCase.attach(declinationTypeCases, on: req.db)
-            }
-            
-            try await word.$declinations.load(on: req.db)
-            for dec in word.declinations {
-                try await dec.$declinationCase.load(on: req.db)
-            }
-            
-            return templates.partialEditDeclinationForm(word: word,
-                                                        withDeclinations: declinationTypeCases, tabIndex: formData.tabIndex)
-        } catch {
-            print(error)
-            throw error
-        }
+		do {
+			let formData = try req.content.decode(EditDeclinationData.self)
+			let templates = WordsManagementTemplates(req: req)
+
+			// Todo validate the IDs
+			let declinationTypeCases = try await DeclinationTypeCase.query(on: req.db)
+				.filter(
+					\.$id ~~ formData.declinationTypeIds
+				).all()
+
+			let word: Word? = try await Word.query(on: req.db).filter(
+				\.$id == formData.wordId
+			).first()
+			guard let word = word else {
+				return templates.notFound()
+			}
+
+			if let decId = formData.declinationId {
+				let declination = try await WordDeclination.query(on: req.db)
+					.filter(
+						\.$id == decId
+					).first()
+				guard let dec = declination else {
+					return templates.notFound()
+				}
+
+				if formData.declination.isEmpty {
+					try await dec.delete(on: req.db)
+				} else {
+					dec.text = formData.declination
+					try await dec.save(on: req.db)
+				}
+
+			} else if !formData.declination.isEmpty {
+				let dec = WordDeclination(
+					text: formData.declination, wordID: formData.wordId)
+				try await dec.save(on: req.db)
+				try await dec.$declinationCase.attach(
+					declinationTypeCases, on: req.db)
+			}
+
+			try await word.$declinations.load(on: req.db)
+			for dec in word.declinations {
+				try await dec.$declinationCase.load(on: req.db)
+			}
+
+			return templates.partialEditDeclinationForm(
+				word: word,
+				withDeclinations: declinationTypeCases, tabIndex: formData.tabIndex)
+		} catch {
+			print(error)
+			throw error
+		}
 	}
 
 	func selectRawImportForm(req: Request) async throws -> Document {

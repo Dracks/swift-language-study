@@ -8,31 +8,31 @@ enum WordType: String, Codable, LosslessStringConvertible {
 	case adjective
 	case verb
 	case pronoun
-    
-    init?(_ description: String) {
-            // Handle the case when the string is empty
-            guard !description.isEmpty else {
-                return nil
-            }
 
-            self.init(rawValue: description)
-        }
+	init?(_ description: String) {
+		// Handle the case when the string is empty
+		guard !description.isEmpty else {
+			return nil
+		}
 
-        var description: String {
-            return rawValue
-        }
+		self.init(rawValue: description)
+	}
+
+	var description: String {
+		return rawValue
+	}
 }
 
 // Enumeration for WordLevel
 enum WordLevel: String, Codable, CaseIterable {
-    case A1
-    case A2
-    case B1
-    case B2
-    case C1
-    case C2
-    case D1
-    case D2
+	case A1
+	case A2
+	case B1
+	case B2
+	case C1
+	case C2
+	case D1
+	case D2
 }
 
 // Language model

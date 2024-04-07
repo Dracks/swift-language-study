@@ -14,11 +14,16 @@ class Templates {
 		name: String,
 		value: String = "",
 		required: Bool = false,
-		error: String? = nil
+		error: String? = nil,
+		tabIndex: Int? = nil
 	) -> Tag {
+		var input = Input().type(type).name(name).value(value).required(required)
+		if let tabIndex = tabIndex {
+			input = input.tabindex(tabIndex)
+		}
 		return Div {
 			Label(label).attribute("for", name)
-			Input().type(type).name(name).value(value).required(required)
+			input
 		}
 	}
 
@@ -146,17 +151,19 @@ class Templates {
 						content
 					}.class("container")
 					Footer {
-                        Div{
-                            A("Swift language study").href(
-                                "https://gitlab.com/dracks/swift-language-study"
-                            )
-                        }
-                        Div{
-                            Small("Version: \(BuildInfo.version) (\(BuildInfo.gitCommit))")
-                        }
-                        Div{
-                            Small("Jaume Singla Valls")
-                        }
+						Div {
+							A("Swift language study").href(
+								"https://gitlab.com/dracks/swift-language-study"
+							)
+						}
+						Div {
+							Small(
+								"Version: \(BuildInfo.version) (\(BuildInfo.gitCommit))"
+							)
+						}
+						Div {
+							Small("Jaume Singla Valls")
+						}
 					}.class("container")
 				}
 			}

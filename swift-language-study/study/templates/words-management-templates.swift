@@ -5,7 +5,7 @@ import Vapor
 class WordsManagementTemplates: Templates {
 	private func rawWordControls(language: Language) -> Tag {
 		return Div {
-			A("Search Raw Word").role("button").class("secondary")
+			A("Search Raw Word").role("button").class("secondary").tabindex(2)
 			Span("Select unassigned Raw Word")
 				.role("button")
 				.htmx(
@@ -14,7 +14,8 @@ class WordsManagementTemplates: Templates {
 				)
 				.htmx("target", "#raw-import-word")
 				.htmx("swap", "outerHTML")
-			A("Delete word").role("button").class("danger")
+				.tabindex(3)
+			A("Delete word").role("button").class("danger").tabindex(4)
 		}
 	}
 	private func emptyRaw(language: Language) -> Tag {
@@ -35,13 +36,15 @@ class WordsManagementTemplates: Templates {
 			Input().name("wordId").value(word?.id?.uuidString).type(.hidden)
 			input(
 				type: .text, label: "Word:", name: "word", value: word?.word ?? "",
-				required: true)
+				required: true, tabIndex: 5)
 			seletctWordLevel(selected: wordLevel ?? word?.level).name("wordLevel").id(
-				"wordLevel")
+				"wordLevel"
+			).tabindex(6)
 			// Submit on change, regenerating this with the ID,
 			// then can get a multiple form, with the matrix, for every declination
 			selectWordType(word?.type).name("wordType").id("wordType").required()
-			Button("Save and complete").type(.submit)
+				.tabindex(7)
+			Button("Save and complete").type(.submit).tabindex(8)
 		}.id("wordForm")
 			.htmx("post", postUrl)
 	}
@@ -89,6 +92,7 @@ class WordsManagementTemplates: Templates {
 					Label("Select language").for("languageId")
 					selectStudyLanguage(languages: languages)
 						.name("languageId")
+						.tabindex(1)
 						.class("extra-fields")
 						.htmx("get", "/words-management/get-form")
 						.htmx("target", "#full-word")
@@ -127,9 +131,9 @@ class WordsManagementTemplates: Templates {
 	func renderDecForm(
 		word: Word,
 		forDeclinations declinations: [DeclinationTypeCase],
-        withTabIndex tabIndex: Int
+		withTabIndex tabindex: Int
 	) -> Tag {
-        let current = word.selectDeclination(match: declinations)
+		let current = word.selectDeclination(match: declinations)
 		return Form {
 			for declination in declinations {
 				Input().type(.hidden).name("declinationTypeIds[]").value(
@@ -140,20 +144,19 @@ class WordsManagementTemplates: Templates {
 				Input().type(.hidden).name("declinationId").value(
 					current.id?.uuidString)
 			}
-            Input().type(.hidden).name("wordId").value(word.id?.uuidString)
-            Input().type(.hidden).name("tabIndex").value(String(tabIndex))
-            Input().name("declination").value(current?.text ?? "").tabindex(tabIndex)
+			Input().type(.hidden).name("wordId").value(word.id?.uuidString)
+			Input().type(.hidden).name("tabindex").value(String(tabindex))
+			Input().name("declination").value(current?.text ?? "").tabindex(tabindex)
 		}.htmx("post", "/words-management/edit-declination")
 			.htmx("swap", "outerHTML")
 			.htmx("trigger", "change")
 	}
 
-
 	func renderDeclinationForms(
 		word: Word, firstDeclination vertical: DeclinationType,
 		secondDeclination horizontal: DeclinationType
 	) -> Tag {
-        let vertCasesSize = vertical.cases.count
+		let vertCasesSize = vertical.cases.count
 		return Table {
 			Tr {
 				Th()
@@ -161,19 +164,23 @@ class WordsManagementTemplates: Templates {
 					Th(horCase.name)
 				}
 			}
-            for (i, vertCase) in vertical.cases.enumerated() {
+			for (i, vertCase) in vertical.cases.enumerated() {
 				Tr {
 					Th(vertCase.name)
-                    for (j,horCase) in horizontal.cases.enumerated() {
+					for (j, horCase) in horizontal.cases.enumerated() {
 						Td {
 							/*renderDecForm(
 								word: word,
 								forDeclinations: [
 									vertCase, horCase,
 								])*/
-                            renderDecForm(
-                                word: word,
-                                forDeclinations:  [vertCase, horCase], withTabIndex: vertCasesSize*j+i+1)
+							renderDecForm(
+								word: word,
+								forDeclinations: [
+									vertCase, horCase,
+								],
+								withTabIndex: vertCasesSize * j + i
+									+ 10)
 						}
 					}
 				}
@@ -191,14 +198,15 @@ class WordsManagementTemplates: Templates {
 				Th()
 
 			}
-            for (i,vertCase) in declination.cases.enumerated() {
+			for (i, vertCase) in declination.cases.enumerated() {
 				Tr {
 					Th(vertCase.name)
 
 					Td {
-                        renderDecForm(
-                            word: word,
-                            forDeclinations:  [vertCase], withTabIndex: i+1)
+						renderDecForm(
+							word: word,
+							forDeclinations: [vertCase],
+							withTabIndex: i + 10)
 					}
 				}
 			}
@@ -240,15 +248,17 @@ class WordsManagementTemplates: Templates {
 			})
 	}
 
-	func partialEditDeclinationForm(word: Word,
+	func partialEditDeclinationForm(
+		word: Word,
 		withDeclinations declinationstypes: [DeclinationTypeCase],
-        tabIndex: Int
+		tabIndex: Int
 	) -> Document {
 		return htmx(
-			renderDecForm(word: word, forDeclinations: declinationstypes,
-                 withTabIndex: tabIndex
-            )
-        )
+			renderDecForm(
+				word: word, forDeclinations: declinationstypes,
+				withTabIndex: tabIndex
+			)
+		)
 	}
 }
 
@@ -256,7 +266,7 @@ extension Templates {
 	func selectWordType(_ type: WordType? = nil) -> Select {
 		// Todo select word type from word
 		return Select {
-            Option("Select type").value("")
+			Option("Select type").value("")
 			Option("Article").value(WordType.article.rawValue).selected(
 				type == .article)
 			Option("Adjective").value(WordType.adjective.rawValue).selected(
