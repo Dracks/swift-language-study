@@ -1,6 +1,6 @@
 import SwiftHtml
 
-extension Templates {
+class LoginTemplates: Templates {
 	func login(username: String, redirect: String?, error: String? = nil) -> Document {
 		return layout(
 			title: "Log in",
@@ -26,23 +26,5 @@ extension Templates {
 					}.method(.post)
 				}.class("login", "small-form")
 		)
-	}
-
-	func profile(name: String, email: String) -> Document {
-		return layout(
-			title: "My profile",
-			content: Main {
-				Article {
-					H1("My Profile")
-					Fieldset {
-						Label("Name: ")
-						Span(name)
-					}
-					Fieldset {
-						Label("Email: ")
-						Span(email)
-					}
-				}
-			}.class("container"))
 	}
 }

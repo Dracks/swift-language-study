@@ -2,7 +2,7 @@ import Fluent
 import SwiftHtml
 import Vapor
 
-struct ProfileController: RouteCollection {
+struct LoginController: RouteCollection {
 	struct Credentials: Content {
 		let username: String
 		let password: String
@@ -16,14 +16,13 @@ struct ProfileController: RouteCollection {
 		let session = routes
 		session.get("login", use: login)
 		session.post("login", use: validateLogin)
-		session.grouped(UserIdentifiedMiddleware()).get("profile", use: profile)
 		session.get("logout", use: logout)
 
 	}
 
 	func login(req: Request) async throws -> Document {
 		let redirect: String? = try req.query.get(at: "redirect")
-		return Templates(req: req).login(username: "", redirect: redirect)
+		return LoginTemplates(req: req).login(username: "", redirect: redirect)
 	}
 
 	func validateLogin(req: Request) async throws -> Response {
@@ -48,19 +47,10 @@ struct ProfileController: RouteCollection {
 			self.app.logger.error("Some error happened \(error)")
 			errorStr = "\(error)"
 		}
-		let body = Templates(req: req).login(
+		let body = LoginTemplates(req: req).login(
 			username: credentials?.username ?? "", redirect: redirect, error: errorStr)
 		return try await body.encodeResponse(for: req)
 
-	}
-
-	func profile(req: Request) async throws -> Response {
-		guard let user = req.auth.get(User.self) else {
-			throw Abort(.internalServerError)
-		}
-		let htmlBody: Document = Templates(req: req).profile(
-			name: user.name ?? "", email: user.email)
-		return try await htmlBody.encodeResponse(for: req)
 	}
 
 	func logout(req: Request) throws -> Response {

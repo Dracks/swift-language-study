@@ -27,7 +27,8 @@ struct DeclinationTypeController: RouteCollection {
 
 	func createTypeForm(req: Request) async throws -> Document {
 		let languages = try await Language.query(on: req.db).all()
-		return Templates(req: req).createDeclinationTypeBase(languages: languages)
+		return DeclinationTypesTemplates(req: req).createDeclinationTypeBase(
+			languages: languages)
 	}
 
 	func selectDecTypesForm(req: Request) async throws -> Document {
@@ -40,14 +41,14 @@ struct DeclinationTypeController: RouteCollection {
 		)
 		.all()
 
-		return Templates(req: req).createDeclinationTypeSelectType(
+		return DeclinationTypesTemplates(req: req).createDeclinationTypeSelectType(
 			languageId: language, types: decTypes)
 	}
 
 	func selectOrCreateTypesForm(req: Request) async throws -> Document {
 		let language: UUID = try req.content.get(at: "language")
 		let type: String = try req.content.get(at: "dec-type")
-		let templates = Templates(req: req)
+		let templates = DeclinationTypesTemplates(req: req)
 		if type == "-- new-type --" {
 			return templates.createDeclinationTypeCreateTypeForm(languageId: language)
 		}
@@ -85,8 +86,9 @@ struct DeclinationTypeController: RouteCollection {
 			\.$language.$id == language
 		)
 		.all()
-		return Templates(req: req).newDeclinationTypeCreatedWithDeclinationsForm(
-			languageId: language, decType: type.id!, types: decTypes, cases: [])
+		return DeclinationTypesTemplates(req: req)
+			.newDeclinationTypeCreatedWithDeclinationsForm(
+				languageId: language, decType: type.id!, types: decTypes, cases: [])
 	}
 
 	func createDecCase(req: Request) async throws -> Document {
@@ -106,14 +108,14 @@ struct DeclinationTypeController: RouteCollection {
 		)
 		.sort(\.$order, .ascending).all()
 
-		return Templates(req: req).createDeclinationsCaseForm(
+		return DeclinationTypesTemplates(req: req).createDeclinationsCaseForm(
 			decType: decTypeId, cases: decCases)
 	}
 
 	func dropDecCase(req: Request) async throws -> Document {
 		let decCaseIdStr = req.parameters.get("case-id") ?? ""
 		let decTypeId: UUID = try req.content.get(at: "dec-type-id")
-		let templates = Templates(req: req)
+		let templates = DeclinationTypesTemplates(req: req)
 
 		if let decCaseId = UUID(uuidString: decCaseIdStr) {
 			let decCase = try await DeclinationTypeCase.query(on: req.db).filter(
@@ -154,7 +156,7 @@ struct DeclinationTypeController: RouteCollection {
 		let moveStr = req.parameters.get("movement") ?? "0"
 
 		let decTypeId: UUID = try req.content.get(at: "dec-type-id")
-		let templates = Templates(req: req)
+		let templates = DeclinationTypesTemplates(req: req)
 
 		if let decCaseId = UUID(uuidString: decCaseIdStr), let move: Int = Int(moveStr) {
 

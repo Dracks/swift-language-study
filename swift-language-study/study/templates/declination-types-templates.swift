@@ -75,7 +75,7 @@ func selectDeclinationTypeForm(languageId: UUID, types: [DeclinationType], selec
 		.attribute("hx-select", "#select-type-form")
 }
 
-extension Templates {
+class DeclinationTypesTemplates: Templates {
 	func createDeclinationTypeBase(languages: [Language]) -> Document {
 		return layout(
 			title: "New declination type",
