@@ -55,6 +55,12 @@ class WordsManagementTemplates: Templates {
 			content: Article {
 				Nav {
 					Ul {
+						A {
+							Span().class("fa fa-search", "secondary")
+							Span("Search")
+						}.href("search").role("button")
+					}
+					Ul {
 						A("New word").href("new-word").role("button")
 					}
 				}
@@ -169,11 +175,6 @@ class WordsManagementTemplates: Templates {
 					Th(vertCase.name)
 					for (j, horCase) in horizontal.cases.enumerated() {
 						Td {
-							/*renderDecForm(
-								word: word,
-								forDeclinations: [
-									vertCase, horCase,
-								])*/
 							renderDecForm(
 								word: word,
 								forDeclinations: [
@@ -196,7 +197,7 @@ class WordsManagementTemplates: Templates {
 
 			Tr {
 				Th()
-
+				Th()
 			}
 			for (i, vertCase) in declination.cases.enumerated() {
 				Tr {
@@ -260,7 +261,45 @@ class WordsManagementTemplates: Templates {
 			)
 		)
 	}
+
+	func searchWordsForm() -> Document {
+		return layout(
+			title: "Search...",
+			content: Article {
+				Div() {
+					Input().type(.search).name("query")
+					.htmx("post", "/words-management/search")
+					.htmx("target", "#search-results")
+					.htmx("trigger", "input changed delay:500ms, query")
+					.htmx("indicator", ".htmx-indicator")
+				/*<input class="form-control" type="search"
+       name="search" placeholder="Begin Typing To Search Users..."
+       hx-post="/search"
+       hx-trigger="input changed delay:500ms, search"
+       hx-target="#search-results"
+       hx-indicator=".htmx-indicator">
+       */
+				}
+				Div("Searching...").class("htmx-indicator")
+				Div().id("search-results")
+			}
+		)
+	}
+
+	func searchWordsList(_ words: [Word]) -> Document {
+		return htmx(Ul(){
+			for word in words {
+				Ul(){
+					A(){
+						Span().class("fa fa-edit")
+					}.href("/words-management/edit-word/\(word.id?.uuidString ?? "")").role("button")
+					Span("[\(word.language.name)] \(word.word)")
+				}
+			}
+		})
+	}
 }
+
 
 extension Templates {
 	func selectWordType(_ type: WordType? = nil) -> Select {

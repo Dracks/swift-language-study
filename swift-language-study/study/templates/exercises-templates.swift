@@ -93,6 +93,11 @@ class ExercisesTemplates: Templates {
 				Input().type(.hidden).name("type").value(
 					query.type?.rawValue ?? "")
 				Button("Next")
+				if user?.isAdmin ?? false {
+					A("Edit").href(
+						"/words-management/edit-word/\(word.id?.uuidString ?? "")"
+					)
+				}
 			}.htmx("post", "/exercises/random-words")
 		])
 	}
