@@ -33,6 +33,8 @@ struct WordsManagementController: RouteCollection {
 			UserIdentifiedMiddleware(), AdminMiddleware(),
 		])
 		wordsRoutes.get("list", use: listWords)
+		wordsRoutes.get("search", use: searchWordsForm)
+		wordsRoutes.post("search", use: searchWords)
 		wordsRoutes.get("new-word", use: newWord)
 		wordsRoutes.post("new-word", use: newWordPost)
 		wordsRoutes.get("edit-word", ":wordId", use: editWord)
@@ -66,6 +68,26 @@ struct WordsManagementController: RouteCollection {
 
 		let rawsList = try await wordsQuery.paginate(for: req)
 		return WordsManagementTemplates(req: req).listWords(words: rawsList)
+	}
+
+	func searchWordsForm(req: Request) -> Document {
+		return WordsManagementTemplates(req: req).searchWordsForm()
+	}
+
+	func searchWords(req: Request) async throws -> Document {
+		let search : String? = try? req.content.get(at: "query")
+		let templates = WordsManagementTemplates(req: req)
+
+		guard let search = search else {
+			return templates.htmx(Ul())
+		}
+		if search.isEmpty {
+			return templates.htmx(Ul())
+		}
+
+		let wordsList : [Word] = try await Word.query(on: req.db).filter(\.$word ~~ search).with(\.$language).range(..<10).all()
+
+		return templates.searchWordsList(wordsList)
 	}
 
 	func newWord(req: Request) async throws -> Document {
