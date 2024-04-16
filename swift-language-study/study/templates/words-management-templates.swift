@@ -151,7 +151,7 @@ class WordsManagementTemplates: Templates {
 					current.id?.uuidString)
 			}
 			Input().type(.hidden).name("wordId").value(word.id?.uuidString)
-			Input().type(.hidden).name("tabindex").value(String(tabindex))
+			Input().type(.hidden).name("tabIndex").value(String(tabindex))
 			Input().name("declination").value(current?.text ?? "").tabindex(tabindex)
 		}.htmx("post", "/words-management/edit-declination")
 			.htmx("swap", "outerHTML")
