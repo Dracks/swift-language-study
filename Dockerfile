@@ -8,7 +8,6 @@ ARG GIT_COMMIT
 COPY ./Package.* ./
 COPY swift-language-study swift-language-study
 COPY swift-language-study-tests swift-language-study-tests
-COPY .build .build
 
 # RUN swift package resolve --skip-update --force-resolved-versions
 RUN echo "struct BuildInfo { static let version = \"$VERSION\"; static let gitCommit = \"$GIT_COMMIT\" }" > swift-language-study/build-info.swift
