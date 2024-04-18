@@ -1,7 +1,15 @@
+# Swift Language Study
+
+This is a simple application made to make me easy to learn the declination of the words in german. 
+The idea is importing a list of words that can be more or less assigned to a level, being able to fulfill the declinations
+of that word, and then be able to randomly show diferent words with his declination. Also it will allow at some moment some autocompletion of declinations
+or similar stuff to practice the word. 
+
+Currently contains the base that I needed, I used some shortcuts to get to some usable version, I expect adding more features in the future. 
 
 ## Tables
 
-```mermaidjs
+```mermaid
 classDiagram
 class WordType {
     <<enumeration>>
@@ -97,7 +105,7 @@ UserWord "1" -- "1" User
 | profile | user | [x] | [x] | [] |
 
 ### View Sections
-* [] View random words/declinations filtered by language, level, word-type.
+* [x] View random words/declinations filtered by language, level, word-type.
 * [] Auto-complete form with random words.
 * [] Set the correct declination type for the words.
 
