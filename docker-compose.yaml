@@ -7,7 +7,7 @@ x-shared_environment: &shared_environment
   
 services:
   swift-study:
-    image: swift-study:latest
+    image: ghcr.io/dracks/swift-language-study:nightly
     build:
       context: .
     environment:
