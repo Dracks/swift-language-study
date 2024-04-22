@@ -164,7 +164,7 @@ class Templates {
 					Footer {
 						Div {
 							A("Swift language study").href(
-								"https://gitlab.com/dracks/swift-language-study"
+								"https://github.com/Dracks/swift-language-study"
 							)
 						}
 						Div {
